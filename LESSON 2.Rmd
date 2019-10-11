@@ -1,0 +1,34 @@
+```{r}
+library(tidyverse)
+dvst <- read_csv("https://raw.githubusercontent.com/vsbuffalo/bds-files/master/chapter-08-r/Dataset_S1.txt")
+view(dvst)
+dvst[1:10.8:12]
+colnames(dvst)[12] <- "percent.GC"
+dvst$GC.binned <- cut(dvst$percent.GC, 5)
+filter(dvst,`total SNPs` >= 85)
+filter(dvst, Pi > 16, percent.GC > 80)
+filter(min("percent.GC"))
+summary(dvst$`percent.GC`)
+view(min(dvst$`percent.GC`))
+filter(dvst, percent.GC==min(percent.GC)|percent.GC==max(percent.GC))
+filter(dvst, 'total SNPs'==0)
+filter(dvst, 'reference Bases'< 1000)
+filter(dvst,Divergence==max(Divergence))
+mutate(dvst, cent = start >= 25800000 & end <= 29700000)
+view(dvst)
+dvst <- mutate(dvst, 
+       diversity = Pi / (10*1000), 
+       cent = start >= 25800000 & end <= 29700000
+)
+arrange(dvst, cent, percent.GC)
+dvst <- rename(dvst, total.SNPs = `total SNPs`,
+       total.Bases = `total Bases`,
+       unique.SNPs = `unique SNPs`,
+       reference.Bases = `reference Bases`) #renaming all the columns with spaces!
+colnames(dvst)
+summarise(dvst, GC = mean(percent.GC, na.rm = TRUE), averageSNPs=mean(total.SNPs, na.rm = TRUE), allSNPs=sum(total.SNPs))
+by_cent <- group_by(dvst, cent)
+summarise(by_cent, GC = mean(percent.GC, na.rm = TRUE), averageSNPs=mean(total.SNPs, na.rm = TRUE))
+```
+
+
